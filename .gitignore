@@ -1,0 +1,14 @@
+# CCS build output
+/Debug/
+/Release/
+*.obj
+*.out
+*.map
+*.d
+*_linkInfo.xml
+ccsObjs.opt
+
+# CCS workspace / debugger state
+/.launches/
+/.settings/
+/targetConfigs/
