@@ -1,8 +1,6 @@
 /*
  * math_utils.c
  *
- *  Created on: Apr 3, 2021
- *      Author: Thoma
  */
 
 #include "math_utils.h"

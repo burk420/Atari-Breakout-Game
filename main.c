@@ -9,12 +9,9 @@
  *  to send it back out. You have three lives, but they are replenished every five levels.
  *
  * Future Goals:
- * - More than a single level
- *   - Requires a level editor, because there's no way I'm doing that by hand
+ *   - Requires a level editor
  * - Power-ups
  *   - "Punching": ball doesn't bounce off blocks, but goes through them
- *   - "Multi-ball": Multiple balls. Could be too much for the MSP430.
- *   - "Longer Paddle": Paddle becomes longer
  * - Sound effects maybe? Make use of the buzzer for simple "bzz" on hits
  */
 

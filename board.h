@@ -9,7 +9,7 @@
  *   LCD SPI CLK     J1.7     P5.2  (UCB1CLK)
  *   LCD SPI MOSI    J2.15    P5.0  (UCB1SIMO)
  *   LCD CS          J2.13    P8.3
- *   LCD RS (D/C)    J4.31    P4.1   (confirmed on hardware by the pin scan)
+ *   LCD RS (D/C)    J4.31    P4.1
  *   LCD RST         J2.17    P5.3
  *   Backlight       J4.39    P3.6
  *   Joystick X      J1.2     P1.2  (A2)
@@ -37,11 +37,11 @@
 #define LCD_CS_DIR  P8DIR
 #define LCD_CS_OUT  P8OUT
 #define LCD_CS_BIT  BIT3
-/* RST: J2.17 = P5.3 (the pin scan confirmed D/C is J4.31, so reset is the other candidate) */
+/* RST: J2.17 = P5.3 */
 #define LCD_RST_DIR P5DIR
 #define LCD_RST_OUT P5OUT
 #define LCD_RST_BIT BIT3
-/* RS / data-command: J4.31 = P4.1 (confirmed by the pin scan) */
+/* RS / data-command: J4.31 = P4.1 */
 #define LCD_DC_DIR  P4DIR
 #define LCD_DC_OUT  P4OUT
 #define LCD_DC_BIT  BIT1
@@ -72,18 +72,15 @@
 #define LED_OUT     P1OUT
 #define LED_BIT     BIT0
 
-/* SPI clock divider: SPI clock = SMCLK / (LCD_SPI_DIV + 1). 0 = 8 MHz. Try 3 (2 MHz) if wiring is long/flaky. */
+/* SPI clock divider: SPI clock = SMCLK / (LCD_SPI_DIV + 1). 0 = 8 MHz. */
 #define LCD_SPI_DIV 0
 
 /* ---- Busy-wait delay (MCLK = 8 MHz, set in main.c) ---- */
 #define MCLK_HZ 8000000UL
 #define DELAY_MS(ms) do { unsigned int _d = (ms); while (_d--) __delay_cycles(MCLK_HZ / 1000); } while (0)
 
-/* Uncomment to test only the LCD: after init the screen cycles red/green/blue/white
- * and the game never starts. */
 /* #define LCD_SELFTEST */
 
-/* Pin scan: uncomment to find the real LCD data/command pin. See PORTING.md. Implies LCD_SELFTEST. */
 /* #define LCD_PINSCAN */
 
 #ifdef LCD_PINSCAN
