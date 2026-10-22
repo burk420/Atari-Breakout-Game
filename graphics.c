@@ -67,6 +67,54 @@ void Draw_Paddle(Graphics_Context *context, int paddle_x, int32_t color) {
     Graphics_fillRectangle(context, &paddle);
 }
 
+void Draw_PaddleMove(Graphics_Context *context, int oldX, int newX) {
+    int oldR = oldX + PADDLE_WIDTH, newR = newX + PADDLE_WIDTH;
+    Graphics_Rectangle r;
+
+    if(oldX == newX) return;
+
+    if(newX > oldX) {
+        // Moving right: clear the strip the paddle left, paint the strip it entered
+        r.xMin = oldX;  r.xMax = (oldR < newX - 1) ? oldR : newX - 1;
+        r.yMin = PADDLE_Y; r.yMax = PADDLE_Y + PADDLE_HEIGHT;
+        Graphics_setForegroundColor(context, GRAPHICS_COLOR_BLACK);
+        Graphics_fillRectangle(context, &r);
+
+        r.xMin = (newX > oldR + 1) ? newX : oldR + 1;  r.xMax = newR;
+        Graphics_setForegroundColor(context, GRAPHICS_COLOR_RED);
+        Graphics_fillRectangle(context, &r);
+    } else {
+        // Moving left
+        r.xMin = (oldX > newR + 1) ? oldX : newR + 1;  r.xMax = oldR;
+        r.yMin = PADDLE_Y; r.yMax = PADDLE_Y + PADDLE_HEIGHT;
+        Graphics_setForegroundColor(context, GRAPHICS_COLOR_BLACK);
+        Graphics_fillRectangle(context, &r);
+
+        r.xMin = newX;  r.xMax = (newR < oldX - 1) ? newR : oldX - 1;
+        Graphics_setForegroundColor(context, GRAPHICS_COLOR_RED);
+        Graphics_fillRectangle(context, &r);
+    }
+}
+
+void Draw_BlocksInRect(Graphics_Context *context, Graphics_Rectangle *blocks, int32_t *colors, char *bindings, int numBlocks, Graphics_Rectangle *rect) {
+    int i;
+    for(i = 0; i < numBlocks; i++) {
+        if(IsNullBlock(&blocks[i])) continue;
+        if(blocks[i].xMin <= rect->xMax && blocks[i].xMax >= rect->xMin &&
+           blocks[i].yMin <= rect->yMax && blocks[i].yMax >= rect->yMin) {
+            Graphics_setForegroundColor(context, colors[(int)bindings[i]]);
+            Graphics_fillRectangle(context, &blocks[i]);
+        }
+    }
+}
+
+void Draw_Separator(Graphics_Context *context, int x1, int x2) {
+    if(x1 < 0) x1 = 0;
+    if(x2 > 127) x2 = 127;
+    Graphics_setForegroundColor(context, GRAPHICS_COLOR_WHITE);
+    Graphics_drawLineH(context, x1, x2, 118);
+}
+
 void Draw_Ball(Graphics_Context *context, int ball_x, int ball_y, int32_t color) {
     Graphics_setForegroundColor(context, color);
     Graphics_fillCircle(context, ball_x, ball_y, BALL_RADIUS);
