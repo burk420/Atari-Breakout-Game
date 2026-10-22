@@ -1,6 +1,10 @@
 /*
  * Breakout
  *
+ * By Thomas Stoeckert
+ *
+ * One-day-project of 2021 #1 - Appx. 8Hrs of work
+ *
  * It's a simple clone of the Atari "Breakout" classic. Use the joystick on the
  *  educational booster pack to move left and right, bouncing the ball up into
  *  the field of bricks. Break all of them to move to the next level.
@@ -9,9 +13,12 @@
  *  to send it back out. You have three lives, but they are replenished every five levels.
  *
  * Future Goals:
- *   - Requires a level editor
+ * - More than a single level
+ *   - Requires a level editor, because there's no way I'm doing that by hand
  * - Power-ups
  *   - "Punching": ball doesn't bounce off blocks, but goes through them
+ *   - "Multi-ball": Multiple balls. Could be too much for the MSP430.
+ *   - "Longer Paddle": Paddle becomes longer
  * - Sound effects maybe? Make use of the buzzer for simple "bzz" on hits
  */
 
@@ -21,6 +28,7 @@
 #include "LcdDriver/middle_driver.h"
 #include "graphics.h"
 #include "math_utils.h"
+#include "buzzer.h"
 #include "levels.h"
 #include <stdio.h>
 #include <string.h>
@@ -73,6 +81,13 @@ int main(void)
 	BTN_IES |=  BUTTON;
 
 	initializeADC();
+#ifdef BUZZER_GPIO_TEST
+	Buzzer_GpioTest();     // 1 s, 4 kHz buzz: if you hear this, the pin and buzzer are fine
+#endif
+	Buzzer_Init();
+#ifdef BUZZER_STARTUP_TEST
+	Buzzer_PlayWin();
+#endif
 
 	/////////////////////////////////////////////////////
 	//           Initialize graphics library           //
@@ -201,7 +216,10 @@ __interrupt void FIXED_UPDATE(void) {
             Graphics_fillCircle(&g_sContext, (lives*6)+4, 123, circleRadius);
 
             // Check for Loss Condition
+            if(lives >= 0) Buzzer_PlayLoseLife();
+
             if(lives < 0) {
+                Buzzer_PlayGameOver();
                 // We're dead. Stop the game, and establish the reset button's interrupt
                 Draw_ModalBox(&g_sContext, "Game Over!", "Play Again?", 1, points);
 
@@ -228,6 +246,7 @@ __interrupt void FIXED_UPDATE(void) {
                 Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
                 Graphics_fillRectangle(&g_sContext, &blocks[i]);
                 blocks[i] = nullBlock;
+                Buzzer_PlayBlockHit();
                 activeBlocks--;
 
                 points++;
@@ -235,6 +254,7 @@ __interrupt void FIXED_UPDATE(void) {
                 // Check for Win Condition
                 if(activeBlocks == 0) {
                     // We won! Stop the game, and establish the reset button's interrupt
+                    Buzzer_PlayWin();
                     Draw_ModalBox(&g_sContext, "You Win!", "Continue?", 1, points);
 
                     // Capture the ball

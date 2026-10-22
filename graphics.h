@@ -23,6 +23,9 @@
 void Initialize_Graphics(Graphics_Context * context);
 void Draw_Playspace(Graphics_Context *context, Graphics_Rectangle *blocks, int32_t *colors, char* bindings, int numBlocks, int lives, int levelNumber);
 void Draw_Paddle(Graphics_Context *context, int paddle_x, int32_t color);
+void Draw_PaddleMove(Graphics_Context *context, int oldX, int newX);
+void Draw_BlocksInRect(Graphics_Context *context, Graphics_Rectangle *blocks, int32_t *colors, char *bindings, int numBlocks, Graphics_Rectangle *rect);
+void Draw_Separator(Graphics_Context *context, int x1, int x2);void Draw_Ball(Graphics_Context *context, int ball_x, int ball_y, int32_t color);
 void Draw_Ball(Graphics_Context *context, int ball_x, int ball_y, int32_t color);
 void Draw_EdgedBox(Graphics_Context *context, Graphics_Rectangle *rect, int inset, int32_t backgroundColor, int32_t foregroundColor);
 void Draw_Points(Graphics_Context *context, unsigned int points);
